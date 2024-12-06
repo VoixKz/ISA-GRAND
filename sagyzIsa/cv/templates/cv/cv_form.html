@@ -1,0 +1,32 @@
+{% extends "authApp/base.html" %}
+
+{% load static %}
+
+{% block title %}Форма на резюме{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'cv/css/cv_form.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <form id="int_form" action="{% url 'process_interest_form' %}" method="POST" class="needs-validation" novalidate>
+            {% csrf_token %}
+            {% for qid, question in questions.items %}
+                <div class="form-group">
+                    <label for="{{ question.getFancyLabelId }}"> {{ question.getFriendlyQuestion }}</label>
+                    {% if question.isChatGPTQuestion %}
+                        <textarea id="{{ question.getFancyName }}" name="{{ question.getFancyLabelId }}" rows="4" cols="50" class="form-control" required></textarea>
+                    {% elif question.isComboBoxQuestion %}
+                        <select id="{{ question.getFancyName }}" name="{{ question.getFancyLabelId }}" class="form-control">
+                            {% for varOption in question.option.responses %}
+                                <option value="{{ forloop.counter }}">{{ varOption }}</option>
+                            {% endfor %}
+                        </select>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+{% endblock %}

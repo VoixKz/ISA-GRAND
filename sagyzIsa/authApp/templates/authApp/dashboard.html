@@ -1,0 +1,85 @@
+{% extends "authApp/base.html" %}
+
+{% load static %}
+
+{% block title %}Панель управления{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'authApp/css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 d-flex flex-column align-items-center">
+    <div class="row profile_top">
+        <div class="col-md-12 text-center profile_top_container">
+            <img class="profile_logo" src="{% static 'authApp/logo.svg' %}" alt="profile_logo">
+            {% if personal_user %}
+                <h2 class="profile_title">{{ personal_user.full_name }}</h2>
+                <p class="profile_status">в активном поиске работы</p>
+                <p><strong>Дата рождения:</strong> {{ personal_user.birth_date }}</p>
+                <p><strong>Номер телефона:</strong> {{ personal_user.phone_number }}</p>
+                <p><strong>Образование:</strong> {{ personal_user.education|default_if_none:"" }}</p>
+                <p><strong>Опыт работы:</strong> {{ personal_user.experience|default_if_none:"" }}</p>
+            {% elif employer %}
+                <h2 class="profile_title">{{ employer.company_name }}</h2>
+            {% else %}
+                <h2 class="profile_title">{{ advisor.name }}</h2>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if employer %}
+    <div class="row profile_top">
+        <div class="col-md-12 text-center profile_top_container">
+            <h3>Информация о работодателе</h3>
+            <p><strong>Название компании:</strong> {{ employer.company_name }}</p>
+            <p><strong>БИН:</strong> {{ employer.bin_number }}</p>
+            <p><strong>Отрасль:</strong> {{ employer.industry }}</p>
+            <p><strong>Номер телефона:</strong> {{ employer.phone_number }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if advisor %}
+    <div class="row profile_top mt-5">
+        <div class="col-md-12 text-center profile_top_container">
+            <h3>Информация о консультанте</h3>
+            <p><strong>Имя:</strong> {{ advisor.name }}</p>
+            <p><strong>Место работы:</strong> {{ advisor.workplace }}</p>
+            <p><strong>Номер телефона:</strong> {{ advisor.phone_number }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="row mt-4 profile_stats">
+        <h3>Статистика</h3>
+        <div class="col-md-12 profile_stats_container">
+            <p><strong>Просмотров:</strong> {{ custom_user.profile_views|default_if_none:"0" }}</p>
+            <p><strong>Откликов:</strong> {{ custom_user.profile_responses|default_if_none:"0" }}</p>
+            <p><strong>В избранном:</strong> {{ custom_user.profile_favorites|default_if_none:"0" }}</p>
+        </div>
+    </div>
+
+    <div class="row mt-4 profile_activity">
+        <div class="col-md-12 profile_activity_container">
+            <h3>Ваша активность:</h3>
+            <h3>63%</h3>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-12 text-center">
+            <button class="btn btn-primary profile_moveUp" onclick="location.href=''">Поднять в поиске</button>
+            <button class="btn btn-primary profile_makeDigest" onclick="location.href=''">Подобрать интересующие темы</button>
+            {% if personal_user %}
+                <button class="btn btn-secondary profile_CV" onclick="location.href='{% url 'cv_form' %}'">
+                    <span>Создать новое резюме</span>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="fill: #fff;">
+                        <path d="M10 0C10.9517 0 11.7241 0.772414 11.7241 1.72414V8.27586H18.2759C18.7331 8.27586 19.1717 8.45751 19.495 8.78085C19.8184 9.10419 20 9.54273 20 10C20 10.4573 19.8184 10.8958 19.495 11.2191C19.1717 11.5425 18.7331 11.7241 18.2759 11.7241H11.7241V18.2759C11.7241 18.7331 11.5425 19.1717 11.2191 19.495C10.8958 19.8184 10.4573 20 10 20C9.54273 20 9.10419 19.8184 8.78085 19.495C8.45751 19.1717 8.27586 18.7331 8.27586 18.2759V11.7241H1.72414C1.26687 11.7241 0.828327 11.5425 0.504988 11.2191C0.18165 10.8958 0 10.4573 0 10C0 9.54273 0.18165 9.10419 0.504988 8.78085C0.828327 8.45751 1.26687 8.27586 1.72414 8.27586H8.27586V1.72414C8.27586 0.772414 9.04828 0 10 0Z" fill="white" />
+                    </svg>
+                </button>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+:root {
+    --font-family: "Inter", serif; 
+}
+
+body {
+    background: #f2f3f4;
+}
+
+#courseGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.course_item {
+    width: 49%;
+    border: 1px solid black;
+    box-sizing: border-box;
+    padding: 20px;
+    border-radius: 20px;
+    background: #ebeaed;
+}
+
+.course-area, .course-duration {
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 20px;
+    text-align: right;
+    color: #020035;
+}
+
+.course-title {
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 32px;
+    color: #020035;
+}
+
+.course-author {
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 20px;
+    color: #020035;
+}
+
+.course-price {
+    font-family: var(--font-family);
+    font-weight: 600;
+    font-size: 40px;
+    color: #020035;
+}
+
+
+@media (max-width: 1200px) {
+    .course_item {
+        width: 100%;
+    }
+}
+

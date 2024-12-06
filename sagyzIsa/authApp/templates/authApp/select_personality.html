@@ -1,0 +1,24 @@
+{% extends "authApp/base.html" %}
+
+{% load static %}
+
+{% block title %}Выбор вида аккаунта{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'authApp/css/select_personality.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Выберите вид аккаунта</h2>
+        <form method="post" class="text-center">
+            {% csrf_token %}
+            <div class="btn-group-vertical" role="group" aria-label="Account Type Selection">
+                <button type="submit" name="account_type" value="personal" class="">Личный аккаунт</button>
+                <button type="submit" name="account_type" value="employer" class="">Работодатель</button>
+                <button type="submit" name="account_type" value="advisor_edu" class="">Адвайзер (Учебное заведение)</button>
+                <button type="submit" name="account_type" value="advisor_non_edu" class="">Адвайзер (Не учебное заведение)</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

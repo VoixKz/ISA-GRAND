@@ -1,0 +1,95 @@
+{% extends "authApp/base.html" %}
+
+{% load static %}
+
+{% block title %}Вакансии{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'search/css/search_vacancies.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+    <script src='{% static "search/js/search_vacancies.js" %}' defer></script>
+{% endblock %}
+
+{% block content %}
+    <div class="hot-vacancies">
+        <h2 class="text-center my-5">🔥Горячие вакансии🔥</h2>
+        <div id="hotVacancyGrid" class="d-flex overflow-auto gap-3">
+            {% for vacancy in hot_vacancies %}
+                <div class="hot-vacancy-item m-2" onclick="location.href='{% url 'vacancy' vacancy.id %}'">
+                    <h5 class="hot-vacancy-title">{{ vacancy.vacancy_title }}</h5>
+                    <p class="hot-vacancy-salary">{{ vacancy.vacancy_salary }}</p>
+                </div>
+                <div class="hot-vacancy-item m-2" onclick="location.href='{% url 'vacancy' vacancy.id %}'">
+                    <h5 class="hot-vacancy-title">{{ vacancy.vacancy_title }}</h5>
+                    <p class="hot-vacancy-salary">{{ vacancy.vacancy_salary }}</p>
+                </div>
+                <div class="hot-vacancy-item m-2" onclick="location.href='{% url 'vacancy' vacancy.id %}'">
+                    <h5 class="hot-vacancy-title">{{ vacancy.vacancy_title }}</h5>
+                    <p class="hot-vacancy-salary">{{ vacancy.vacancy_salary }}</p>
+                </div>
+                <div class="hot-vacancy-item m-2" onclick="location.href='{% url 'vacancy' vacancy.id %}'">
+                    <h5 class="hot-vacancy-title">{{ vacancy.vacancy_title }}</h5>
+                    <p class="hot-vacancy-salary">{{ vacancy.vacancy_salary }}</p>
+                </div>
+                <div class="hot-vacancy-item m-2" onclick="location.href='{% url 'vacancy' vacancy.id %}'">
+                    <h5 class="hot-vacancy-title">{{ vacancy.vacancy_title }}</h5>
+                    <p class="hot-vacancy-salary">{{ vacancy.vacancy_salary }}</p>
+                </div>
+            {% empty %}
+                <p>Горячих вакансий не найдено</p>
+            {% endfor %}
+        </div>
+    </div>
+    <form method="get" class="py-4 form-inline d-flex gap-5 justify-content-center align-items-center">
+        <input type="text" id="searchInput" name="search" class="form-control mr-2 w-50" placeholder="Поиск">
+        <div class="form-group mr-2 d-flex gap-3">
+            <label for="specialty" class="mr-2">Сортировать по области:</label>
+            <select id="specialtySelect" name="specialty" class="form-control">
+                <option value="">Все области</option>
+                {% for specialty in specialties %}
+                    <option value="{{ specialty }}">{{ specialty }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+    <div class="btn-group gap-3 d-flex justify-content-center align-items-center" role="group" aria-label="Сортировать по">
+        <button type="button" id="sortDate" class="btn btn-secondary btn-sm">Дата ↕</button>
+        <button type="button" id="sortSalary" class="btn btn-secondary btn-sm">Зарплата ↕</button>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="text-center my-5">Вакансии</h1>
+                <div id="vacancyGrid">
+                    {% for vacancy in vacancies %}
+                        <div class="vacancy_item" onclick="location.href='{% url 'vacancy' vacancy.id %}'" class="list-group-item list-group-item-action">                            
+                            <div class="vacancy_item_top d-flex justify-content-between">
+                                <p class="mb-1 vacancy-date">
+                                    {{ vacancy.created_at|date:"d.m.Y" }}
+                                </p>
+                                <p class="vacancy-area">{{ vacancy.vacancy_area }}</p>
+                            </div>
+                            <div class="vacancy_item_bottom d-flex justify-content-between align-items-center">
+                                <div class="w-100">
+                                    <h5 class="mb-1 vacancy-title">{{ vacancy.vacancy_title }}</h5>
+                                    <small class="vacancy-company">{{ vacancy.vacancy_company }}</small>
+                                    <small class="vacancy-location">{{ vacancy.vacancy_location }}</small>
+                                </div>
+                                <p class="mb-1 vacancy-salary">{{ vacancy.vacancy_salary }}</p>
+                            </div>
+                            <div class="vacancy_requirements mt-3 d-flex">
+                                <p class="requirement">{{ vacancy.vacancy_requirements }}</p>
+                                <p class="requirement">{{ vacancy.vacancy_requirements }}</p>
+                                <p class="requirement">{{ vacancy.vacancy_requirements }}</p>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p>Вакансий не найдено</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

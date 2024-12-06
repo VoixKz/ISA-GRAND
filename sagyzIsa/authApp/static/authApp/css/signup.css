@@ -1,0 +1,33 @@
+:root {
+    --font-family: "Inter", serif; 
+}
+
+body {
+    font-family: var(--font-family);
+}
+
+.container {
+    max-width: 600px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-primary {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.invalid-feedback {
+    display: none;
+}
+
+input:invalid + .invalid-feedback {
+    display: block;
+}
+
+hr {
+    margin-bottom: 30px;
+}

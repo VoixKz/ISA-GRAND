@@ -1,0 +1,28 @@
+{% extends "authApp/base.html" %}
+
+{% load static %}
+
+{% block title %}{{ course.course_name }}{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header">
+                <h2>{{ course.course_name }}</h2>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Описание курса</h5>
+                <p class="card-text">{{ course.course_description }}</p>
+                <h5 class="card-title">Длительность курса</h5>
+                <p class="card-text">{{ course.course_duration }} дней</p>
+                <h5 class="card-title">Область курса</h5>
+                <p class="card-text">{{ course.course_area }}</p>
+                <h5 class="card-title">Цена курса</h5>
+                <p class="card-text">{{ course.course_price }} руб.</p>
+                <h5 class="card-title">Автор курса</h5>
+                <p class="card-text">{{ course.course_author }}</p>
+                <a href="{% url 'courses' %}" class="btn btn-primary mt-3">Вернуться назад</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

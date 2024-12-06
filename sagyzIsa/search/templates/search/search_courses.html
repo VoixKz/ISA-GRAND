@@ -1,0 +1,67 @@
+{% extends "authApp/base.html" %}
+
+{% load static %}
+
+{% block title %}Курсы{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'search/css/search_courses.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+    <script src='{% static "search/js/search_courses.js" %}' defer></script>
+{% endblock %}
+
+{% block content %}
+    <form method="get" class="py-4 form-inline d-flex gap-5 justify-content-center align-items-center">
+        <input type="text" id="searchInput" name="search" class="form-control mr-2 w-50" placeholder="Поиск">
+        <div class="form-group mr-2 d-flex gap-3">
+            <label for="area" class="mr-2">Сортировать по области:</label>
+            <select id="areaSelect" name="area" class="form-control">
+                <option value="">Все области</option>
+                {% for area in areas %}
+                    <option value="{{ area }}">{{ area }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+    <div class="btn-group gap-3 d-flex justify-content-center align-items-center" role="group" aria-label="Сортировать по">
+        <button type="button" id="sortDuration" class="btn btn-secondary btn-sm">Длительность ↕</button>
+        <button type="button" id="sortPrice" class="btn btn-secondary btn-sm">Цена ↕</button>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="text-center my-5">Курсы</h1>
+                <div id="courseGrid">
+                    {% for course in courses %}
+                        <div class="course_item" onclick="location.href='{% url 'course' course.id %}'" class="list-group-item list-group-item-action ">                            
+                            <div class="course_item_top d-flex justify-content-between">
+                                <p class="mb-1 course-duration">
+                                    {{ course.course_duration }} 
+                                    {% if course.course_duration|add:0 == 1 %}
+                                        день
+                                    {% elif course.course_duration|add:0 > 1 and course.course_duration|add:0 < 5 %}
+                                        дня
+                                    {% else %}
+                                        дней
+                                    {% endif %}
+                                </p>
+                                <p class="course-area">{{ course.course_area }}</p>
+                            </div>
+                            <div class="course_item_bottom d-flex justify-content-between align-items-center">
+                                <div class="w-100">
+                                    <h5 class="mb-1 course-title">{{ course.course_name }}</h5>
+                                    <small class="course-author">{{ course.course_author }}</small>
+                                </div>
+                                <p class="mb-1 course-price">{{ course.course_price }}</p>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p>Курсов не найдено</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

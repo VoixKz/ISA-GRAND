@@ -1,0 +1,31 @@
+:root {
+    --font-family: "Inter", serif; 
+}
+
+body {
+    font-family: var(--font-family);
+}
+
+.btn-group-vertical {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.btn-group-vertical button {
+    width: 50%;
+    background-color: transparent;
+    border: 3px solid #2000b1;
+    border-radius: 8px;
+    padding: 20px 20px;
+    margin: 10px 0;
+    font-size: 24px;
+    color: #2000b1;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-group-vertical button:hover {
+    background-color: #2000b1;
+    color: #fff;
+}

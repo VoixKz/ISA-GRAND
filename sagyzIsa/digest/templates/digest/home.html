@@ -1,0 +1,37 @@
+{% extends "authApp/base.html" %}
+
+{% load static %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="home_controls d-flex justify-content-between align-items-center">
+            <h2 id="mainHeading" class="display-4 mb-5">Главная страница</h2>
+            <form method="post" action="{% url 'home' %}">
+                {% csrf_token %}
+                {% if show_all %}
+                    <button type="submit" name="show_all" class="btn btn-primary">Отобразить все статьи</button>
+                {% else %}
+                    {% if user.is_authenticated %}
+                        <button type="submit" name="recommend" class="btn btn-primary">Отобразить по моим рекомендациям</button>
+                    {% endif %}
+                {% endif %}
+            </form>
+        </div>
+        <div class="row">
+            {% for article in articles %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ article.title }}</h5>
+                            <p class="card-text">{{ article.date }}</p>
+                            <p class="card-text">{{ article.scope }}</p>
+                            <a href="{{ article.link }}" class="btn btn-primary">Читать далее</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "authApp/base.html" %}
+
+{% load static %}
+
+{% block title %}{{ vacancy.vacancy_title }}{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-header">
+                <h2>{{ vacancy.vacancy_title }}</h2>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Описание вакансии</h5>
+                <p class="card-text">{{ vacancy.vacancy_description }}</p>
+                <h5 class="card-title">Область вакансии</h5>
+                <p class="card-text">{{ vacancy.vacancy_area }}</p>
+                <h5 class="card-title">Зарплата</h5>
+                <p class="card-text">{{ vacancy.vacancy_salary }} руб.</p>
+                <h5 class="card-title">Дата создания</h5>
+                <p class="card-text">{{ vacancy.created_at }}</p>
+                <h5 class="card-title">Автор вакансии</h5>
+                <p class="card-text">{{ vacancy.vacancy_author }}</p>
+                <a href="{% url 'vacancies' %}" class="btn btn-primary mt-3">Вернуться назад</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
