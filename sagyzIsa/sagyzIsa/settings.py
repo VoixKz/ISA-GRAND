@@ -41,9 +41,9 @@ if _secret_key_env is not None:
 elif DEBUG:
     SECRET_KEY = get_random_secret_key()
 else:
-    SECRET_KEY = ''
-if not DEBUG and not SECRET_KEY:
     raise ValueError('SECRET_KEY must be set when DEBUG is disabled.')
+if not DEBUG and not SECRET_KEY:
+    raise ValueError('SECRET_KEY must not be empty when DEBUG is disabled.')
 
 _allowed_hosts_env = os.getenv('ALLOWED_HOSTS')
 if _allowed_hosts_env is None:
