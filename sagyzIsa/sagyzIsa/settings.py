@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from dotenv import load_dotenv
+from django.core.management.utils import get_random_secret_key
 import os
 
 load_dotenv()
@@ -35,13 +36,22 @@ DEBUG = _env_bool('DEBUG', True)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 _secret_key_env = os.getenv('SECRET_KEY')
-SECRET_KEY = _secret_key_env if _secret_key_env is not None else 'dev-only-insecure-secret-key'
-if not DEBUG and SECRET_KEY == 'dev-only-insecure-secret-key':
+if _secret_key_env is not None:
+    SECRET_KEY = _secret_key_env
+elif DEBUG:
+    SECRET_KEY = get_random_secret_key()
+else:
+    SECRET_KEY = ''
+if not DEBUG and not SECRET_KEY:
     raise ValueError('SECRET_KEY must be set when DEBUG is disabled.')
 
-ALLOWED_HOSTS = [
-    host.strip() for host in os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',') if host.strip()
-]
+_allowed_hosts_env = os.getenv('ALLOWED_HOSTS')
+if _allowed_hosts_env is None:
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost'] if DEBUG else []
+else:
+    ALLOWED_HOSTS = [host.strip() for host in _allowed_hosts_env.split(',') if host.strip()]
+if not DEBUG and not ALLOWED_HOSTS:
+    raise ValueError('ALLOWED_HOSTS must be set when DEBUG is disabled.')
 
 
 # Application definition
@@ -159,7 +169,7 @@ if not os.path.exists(MEDIA_ROOT):
     os.makedirs(MEDIA_ROOT)
 
 if not DEBUG:
-    _secure_hsts_seconds = os.getenv('SECURE_HSTS_SECONDS', '3600')
+    _secure_hsts_seconds = os.getenv('SECURE_HSTS_SECONDS', '31536000')
     try:
         SECURE_HSTS_SECONDS = int(_secure_hsts_seconds)
     except ValueError as exc:
