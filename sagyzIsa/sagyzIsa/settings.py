@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from dotenv import load_dotenv
+from django.core.management.utils import get_random_secret_key
 import os
 
 load_dotenv()
@@ -23,13 +24,32 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
+def _env_bool(name: str, default: bool) -> bool:
+    value = os.getenv(name)
+    if value is None:
+        return default
+    return value.strip().lower() in {'1', 'true', 'yes', 'on'}
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = _env_bool('DEBUG', True)
 
-ALLOWED_HOSTS = []
+# SECURITY WARNING: keep the secret key used in production secret!
+_secret_key_env = os.getenv('SECRET_KEY')
+if _secret_key_env is not None:
+    SECRET_KEY = _secret_key_env
+elif DEBUG:
+    SECRET_KEY = get_random_secret_key()
+else:
+    raise ValueError('SECRET_KEY must be set when DEBUG is disabled.')
+
+_allowed_hosts_env = os.getenv('ALLOWED_HOSTS')
+if _allowed_hosts_env is None:
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost'] if DEBUG else []
+else:
+    ALLOWED_HOSTS = [host.strip() for host in _allowed_hosts_env.split(',') if host.strip()]
+if not DEBUG and not ALLOWED_HOSTS:
+    raise ValueError('ALLOWED_HOSTS must be set when DEBUG is disabled.')
 
 
 # Application definition
@@ -145,3 +165,18 @@ MEDIA_ROOT = BASE_DIR /'media'
 
 if not os.path.exists(MEDIA_ROOT):
     os.makedirs(MEDIA_ROOT)
+
+if not DEBUG:
+    # 31536000 seconds = 1 year
+    _secure_hsts_seconds = os.getenv('SECURE_HSTS_SECONDS', '31536000')
+    try:
+        SECURE_HSTS_SECONDS = int(_secure_hsts_seconds)
+    except ValueError as exc:
+        raise ValueError(f'SECURE_HSTS_SECONDS must be an integer value, got: {_secure_hsts_seconds!r}') from exc
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = _env_bool('SECURE_HSTS_INCLUDE_SUBDOMAINS', False)
+    SECURE_HSTS_PRELOAD = _env_bool('SECURE_HSTS_PRELOAD', False)
+    SECURE_SSL_REDIRECT = _env_bool('SECURE_SSL_REDIRECT', True)
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'
