@@ -34,7 +34,10 @@ def _env_bool(name: str, default: bool) -> bool:
 DEBUG = _env_bool('DEBUG', True)
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY') or 'dev-only-insecure-secret-key'
+_secret_key_env = os.getenv('SECRET_KEY')
+SECRET_KEY = _secret_key_env if _secret_key_env is not None else 'dev-only-insecure-secret-key'
+if not DEBUG and not SECRET_KEY:
+    raise ValueError('SECRET_KEY must not be empty when DEBUG is disabled.')
 if not DEBUG and SECRET_KEY == 'dev-only-insecure-secret-key':
     raise ValueError('SECRET_KEY must be set when DEBUG is disabled.')
 
@@ -158,7 +161,11 @@ if not os.path.exists(MEDIA_ROOT):
     os.makedirs(MEDIA_ROOT)
 
 if not DEBUG:
-    SECURE_HSTS_SECONDS = int(os.getenv('SECURE_HSTS_SECONDS', '3600'))
+    _secure_hsts_seconds = os.getenv('SECURE_HSTS_SECONDS', '3600')
+    try:
+        SECURE_HSTS_SECONDS = int(_secure_hsts_seconds)
+    except ValueError as exc:
+        raise ValueError('SECURE_HSTS_SECONDS must be an integer value.') from exc
     SECURE_HSTS_INCLUDE_SUBDOMAINS = _env_bool('SECURE_HSTS_INCLUDE_SUBDOMAINS', False)
     SECURE_HSTS_PRELOAD = _env_bool('SECURE_HSTS_PRELOAD', False)
     SECURE_SSL_REDIRECT = _env_bool('SECURE_SSL_REDIRECT', True)
