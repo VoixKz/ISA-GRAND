@@ -42,8 +42,6 @@ elif DEBUG:
     SECRET_KEY = get_random_secret_key()
 else:
     raise ValueError('SECRET_KEY must be set when DEBUG is disabled.')
-if not DEBUG and not SECRET_KEY:
-    raise ValueError('SECRET_KEY must not be empty when DEBUG is disabled.')
 
 _allowed_hosts_env = os.getenv('ALLOWED_HOSTS')
 if _allowed_hosts_env is None:
@@ -169,6 +167,7 @@ if not os.path.exists(MEDIA_ROOT):
     os.makedirs(MEDIA_ROOT)
 
 if not DEBUG:
+    # 31536000 seconds = 1 year
     _secure_hsts_seconds = os.getenv('SECURE_HSTS_SECONDS', '31536000')
     try:
         SECURE_HSTS_SECONDS = int(_secure_hsts_seconds)
